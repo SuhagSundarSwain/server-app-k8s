@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Server, Globe, Network, Activity, AlertCircle, Monitor } from 'lucide-react'
+import { Server, Globe, Network, Activity, AlertCircle, Monitor, User, Link as LinkIcon } from 'lucide-react'
 
 type ServerInfo = {
   hostname: string
@@ -82,22 +82,26 @@ function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6 md:p-12 font-sans">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex items-center gap-4 border-b border-slate-700 pb-6">
-          <div className="p-3 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12 font-sans relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-blue-600/30 to-cyan-500/20 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-tr from-fuchsia-600/20 to-purple-500/10 blur-3xl" />
+      </div>
+      <div className="max-w-5xl mx-auto relative">
+        <header className="mb-10 flex items-center gap-5 border-b border-slate-800 pb-6">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 shadow-xl shadow-blue-600/25 ring-1 ring-white/10">
             <Server className="w-8 h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-              Server Instance Info
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-cyan-300 to-teal-200 bg-clip-text text-transparent">
+              Server Instance Dashboard
             </h1>
-            <p className="text-slate-400 mt-1">Real-time system diagnostics</p>
+            <p className="text-slate-400 mt-2">Live system diagnostics and network insights</p>
           </div>
         </header>
 
         {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+          <div className="mb-6 bg-gradient-to-br from-red-500/15 to-red-500/5 border border-red-500/40 text-red-300 p-4 rounded-xl flex items-center gap-3 shadow-lg shadow-red-900/20">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <p>{error}</p>
           </div>
@@ -105,7 +109,7 @@ function App() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Main Info Card */}
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-600">
+          <div className="group bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-700 hover:-translate-y-0.5">
             <div className="flex items-center gap-2 mb-4 text-blue-400">
               <Monitor className="w-5 h-5" />
               <h2 className="text-lg font-semibold">System Identity</h2>
@@ -113,14 +117,14 @@ function App() {
             <div className="space-y-4">
               <div>
                 <span className="text-slate-500 text-sm block mb-1">Hostname</span>
-                <span className="text-xl font-mono bg-slate-900/50 px-3 py-2 rounded-lg border border-slate-700/50 block w-full truncate" title={serverInfo?.hostname}>
+                <span className="text-xl font-mono bg-slate-900/60 px-3 py-2 rounded-lg border border-slate-700/50 block w-full truncate ring-1 ring-white/5" title={serverInfo?.hostname}>
                   {serverInfo?.hostname ?? 'Loading...'}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 text-sm block mb-1">Primary IPv4</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-mono text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-lg border border-emerald-400/20">
+                  <span className="text-lg font-mono text-emerald-300 bg-emerald-400/10 px-3 py-1 rounded-lg border border-emerald-400/20 ring-1 ring-white/5">
                     {serverInfo?.primaryIpv4 ?? 'Loading...'}
                   </span>
                 </div>
@@ -129,7 +133,7 @@ function App() {
           </div>
 
           {/* Kubernetes Environment */}
-          <div className="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-600">
+          <div className="group bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-700 hover:-translate-y-0.5">
             <div className="flex items-center gap-2 mb-4 text-purple-400">
               <Activity className="w-5 h-5" />
               <h2 className="text-lg font-semibold">Environment (K8s)</h2>
@@ -157,7 +161,7 @@ function App() {
           </div>
 
           {/* Network Interfaces */}
-          <div className="md:col-span-2 bg-slate-800/50 backdrop-blur border border-slate-700 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-600">
+          <div className="md:col-span-2 bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-700">
             <div className="flex items-center gap-2 mb-4 text-emerald-400">
               <Network className="w-5 h-5" />
               <h2 className="text-lg font-semibold">Network Interfaces</h2>
@@ -167,7 +171,7 @@ function App() {
                 serverInfo.addresses
                   .filter((a) => a.family === 'IPv4')
                   .map((a, i) => (
-                    <div key={i} className="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex flex-col transition-colors hover:bg-slate-900">
+                    <div key={i} className="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50 ring-1 ring-white/5 flex flex-col transition-all hover:bg-slate-900 hover:-translate-y-0.5">
                       <span className="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1">{a.iface}</span>
                       <span className="font-mono text-slate-200">{a.address}</span>
                     </div>
@@ -179,7 +183,7 @@ function App() {
           </div>
 
           {/* Client Fallback */}
-          <div className="md:col-span-2 bg-slate-800/30 border border-slate-700/50 rounded-2xl p-6">
+          <div className="md:col-span-2 bg-slate-900/30 border border-slate-800 rounded-2xl p-6 ring-1 ring-white/5">
             <div className="flex items-center gap-2 mb-4 text-orange-400">
               <Globe className="w-5 h-5" />
               <h2 className="text-lg font-semibold">Client Perspective (Fallback)</h2>
@@ -187,13 +191,13 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <span className="text-slate-500 text-sm block mb-1">Public IP</span>
-                <span className="font-mono text-lg text-orange-200 bg-orange-500/10 px-3 py-1 rounded-lg border border-orange-500/20 inline-block">
+                <span className="font-mono text-lg text-orange-200 bg-orange-500/10 px-3 py-1 rounded-lg border border-orange-500/20 inline-block ring-1 ring-white/5">
                   {publicIp ?? 'Loading...'}
                 </span>
               </div>
               <div>
                 <span className="text-slate-500 text-sm block mb-1">Local IPs (WebRTC)</span>
-                <span className="font-mono text-sm text-slate-400 bg-slate-900/30 p-2 rounded block">
+                <span className="font-mono text-sm text-slate-300 bg-slate-900/40 p-2 rounded block ring-1 ring-white/5">
                   {fallbackLocalIps.length ? fallbackLocalIps.join(', ') : 'Unavailable'}
                 </span>
               </div>
@@ -201,8 +205,34 @@ function App() {
           </div>
         </div>
 
-        <footer className="mt-12 text-center text-slate-600 text-sm pb-8">
-          <p>Server Dashboard v1.0 • Powered by React & Tailwind</p>
+        <footer className="mt-12 text-center text-slate-400 text-sm pb-8 space-y-3">
+          <p className="text-slate-500">Server Dashboard v1.0 • React + Tailwind</p>
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center gap-2 text-slate-300">
+              <User className="w-4 h-4" />
+              <span className="font-medium">Developer & Owner: Suhag Sundar Swain</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://github.com/SuhagSundarSwain"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 transition-colors px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20"
+              >
+                <LinkIcon className="w-4 h-4" />
+                <span>GitHub</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/suhagsundarswain/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-blue-300 hover:text-blue-200 transition-colors px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20"
+              >
+                <LinkIcon className="w-4 h-4" />
+                <span>LinkedIn</span>
+              </a>
+            </div>
+          </div>
         </footer>
       </div>
     </div>

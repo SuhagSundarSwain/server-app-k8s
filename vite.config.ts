@@ -5,11 +5,15 @@ import os from 'os'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: true,
+  },
   plugins: [
     react(),
     tailwindcss(),
     {
       name: 'dev-ip-endpoint',
+
       configureServer(server) {
         server.middlewares.use('/api/info', (_req, res) => {
           const nets = os.networkInterfaces()

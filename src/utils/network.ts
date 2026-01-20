@@ -1,11 +1,14 @@
 export function getLocalIps(): Promise<string[]> {
+  const w = window as unknown as {
+    RTCPeerConnection?: typeof RTCPeerConnection
+    mozRTCPeerConnection?: typeof RTCPeerConnection
+    webkitRTCPeerConnection?: typeof RTCPeerConnection
+  }
   const RTCPeer =
-    (window as any).RTCPeerConnection ||
-    (window as any).mozRTCPeerConnection ||
-    (window as any).webkitRTCPeerConnection
+    w.RTCPeerConnection || w.mozRTCPeerConnection || w.webkitRTCPeerConnection
   if (!RTCPeer) return Promise.resolve([])
   const ipSet = new Set<string>()
-  return new Promise(async (resolve) => {
+  return new Promise((resolve) => {
     const pc = new RTCPeer({
       iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
     })
@@ -20,11 +23,26 @@ export function getLocalIps(): Promise<string[]> {
       if (!ip) return
       ipSet.add(ip)
     }
-    const offer = await pc.createOffer()
-    await pc.setLocalDescription(offer)
-    setTimeout(() => {
-      pc.close()
-      resolve(Array.from(ipSet))
-    }, 1500)
+    pc
+      .createOffer()
+      .then((offer) => pc.setLocalDescription(offer))
+      .then(() => {
+        setTimeout(() => {
+          try {
+            pc.close()
+          } catch {
+            void 0
+          }
+          resolve(Array.from(ipSet))
+        }, 1500)
+      })
+      .catch(() => {
+        try {
+          pc.close()
+        } catch {
+          void 0
+        }
+        resolve(Array.from(ipSet))
+      })
   })
 }

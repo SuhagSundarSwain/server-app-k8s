@@ -28,7 +28,7 @@ function Footer() {
   )
   return (
     <footer className="mt-12 text-center text-slate-400 text-sm pb-8 space-y-3">
-      <TechStacks items={stacks} version="Server Dashboard v1.3.3" />
+      <TechStacks items={stacks} version="Server Dashboard v1.3.4" />
       <div className="flex flex-col items-center gap-2">
         <DeveloperInfo name="Suhag Sundar Swain" />
         <SocialLinks links={links} />

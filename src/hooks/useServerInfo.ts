@@ -9,29 +9,35 @@ export function useServerInfo() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    let cancelled = false
+    const controller = new AbortController()
+    const signal = controller.signal
+    let mounted = true
     ;(async () => {
       try {
-        const res = await fetch('/api/info')
-        if (res.ok) {
-          const info = (await res.json()) as ServerInfo
-          if (!cancelled) setServerInfo(info)
-        } else {
-          throw new Error('api failed')
-        }
+        const [infoRes] = await Promise.all([fetch('/api/info', { signal })])
+        if (!infoRes.ok) throw new Error('api failed')
+        const info = (await infoRes.json()) as ServerInfo
+        if (mounted) setServerInfo(info)
       } catch {
-        if (!cancelled) setError('Unable to reach server info. Showing fallback.')
+        if (mounted) setError('Unable to reach server info. Showing fallback.')
       }
       try {
-        const res = await fetch('https://api.ipify.org?format=json')
-        const data = (await res.json()) as { ip: string }
-        if (!cancelled) setPublicIp(data.ip)
-      } catch {}
-      const locals = await getLocalIps()
-      if (!cancelled) setFallbackLocalIps(locals)
+        const [ipRes, locals] = await Promise.all([
+          fetch('https://api.ipify.org?format=json'),
+          getLocalIps(),
+        ])
+        if (ipRes.ok) {
+          const data = (await ipRes.json()) as { ip: string }
+          if (mounted) setPublicIp(data.ip)
+        }
+        if (mounted) setFallbackLocalIps(locals)
+      } catch {
+        // ignore
+      }
     })()
     return () => {
-      cancelled = true
+      mounted = false
+      controller.abort()
     }
   }, [])
 

@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { Globe } from 'lucide-react'
 
-export default function ClientFallbackCard({
+function ClientFallbackCard({
   publicIp,
   localIps,
 }: {
@@ -30,3 +31,4 @@ export default function ClientFallbackCard({
     </div>
   )
 }
+export default memo(ClientFallbackCard)

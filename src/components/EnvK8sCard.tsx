@@ -1,7 +1,8 @@
+import { memo } from 'react'
 import { Activity } from 'lucide-react'
 import type { EnvInfo } from '../types'
 
-export default function EnvK8sCard({ env }: { env: EnvInfo | undefined }) {
+function EnvK8sCard({ env }: { env: EnvInfo | undefined }) {
   return (
     <div className="group bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-700 hover:-translate-y-0.5">
       <div className="flex items-center gap-2 mb-4 text-purple-400">
@@ -31,3 +32,4 @@ export default function EnvK8sCard({ env }: { env: EnvInfo | undefined }) {
     </div>
   )
 }
+export default memo(EnvK8sCard)

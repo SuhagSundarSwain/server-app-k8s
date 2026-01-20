@@ -1,7 +1,8 @@
+import { memo } from 'react'
 import { Monitor } from 'lucide-react'
 import type { ServerInfo } from '../types'
 
-export default function SystemIdentityCard({ info }: { info: ServerInfo | null }) {
+function SystemIdentityCard({ info }: { info: ServerInfo | null }) {
   return (
     <div className="group bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-xl transition-all hover:shadow-2xl hover:border-slate-700 hover:-translate-y-0.5">
       <div className="flex items-center gap-2 mb-4 text-blue-400">
@@ -31,3 +32,4 @@ export default function SystemIdentityCard({ info }: { info: ServerInfo | null }
     </div>
   )
 }
+export default memo(SystemIdentityCard)

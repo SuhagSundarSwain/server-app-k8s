@@ -6,9 +6,14 @@ import NetworkInterfacesCard from './components/NetworkInterfacesCard'
 import ClientFallbackCard from './components/ClientFallbackCard'
 import Footer from './components/Footer'
 import { useServerInfo } from './hooks/useServerInfo'
+import { useMemo } from 'react'
 
 function App() {
   const { serverInfo, fallbackLocalIps, publicIp, error } = useServerInfo()
+  const ipv4Addresses = useMemo(
+    () => (serverInfo?.addresses ?? []).filter((a) => a.family === 'IPv4'),
+    [serverInfo?.addresses]
+  )
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12 font-sans relative overflow-hidden">
@@ -26,7 +31,7 @@ function App() {
 
           <EnvK8sCard env={serverInfo?.env} />
 
-          <NetworkInterfacesCard addresses={serverInfo?.addresses} />
+          <NetworkInterfacesCard addresses={ipv4Addresses} />
 
           <ClientFallbackCard publicIp={publicIp} localIps={fallbackLocalIps} />
         </div>

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Server } from 'lucide-react'
 
 type Props = {
@@ -5,7 +6,7 @@ type Props = {
   subtitle: string
 }
 
-export default function Header({ title, subtitle }: Props) {
+function Header({ title, subtitle }: Props) {
   return (
     <header className="mb-10 flex items-center gap-5 border-b border-slate-800 pb-6">
       <div className="p-3 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 shadow-xl shadow-blue-600/25 ring-1 ring-white/10">
@@ -20,3 +21,4 @@ export default function Header({ title, subtitle }: Props) {
     </header>
   )
 }
+export default memo(Header)
